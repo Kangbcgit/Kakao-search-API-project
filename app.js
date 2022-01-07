@@ -11,47 +11,18 @@
     //         console.log(res.json());
     //     })
 
-    let URL = 'http://localhost:5000/searchQuery';
-    let resultLength = 0;
-    const fetchGET = () => {
-        fetch(URL)
-            .then(res => res.json())
-            .then(result => {
-                // console.log(...result); //확인
-                resultLength = [...result].length;
-            })
-    };
 
-    const fetchPOST = () => {
-        const reqObject = {
-            method: "POST",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: document.querySelector('header form input').value
-            })
-        }
-        fetch(URL, reqObject)
-            .then(res => {
-                if (res.status === 201 || res.status === 200) {
-                    alert('등록 성공!');
-                } else {
-                    alert('등록 실패!');
-                }
-            })
-    };
-    
+    // const query= document.querySelector('header form input').value;
+    // console.log('q:',query);
+
     document.querySelector('header form input').addEventListener('keydown', e => {
         if (!e.target.matches('input')) return;
 
         if (e.key == 'Enter') {
             e.preventDefault();
-            fetchGET();
-            fetchPOST();
-            window.location.href = "searchPage/search.html"
-        }
+            window.location.href = "searchPage/search.html?query=" + document.querySelector('header form input').value;
 
-        
+            document.querySelector('form').submit();
+        }
     })
 })();

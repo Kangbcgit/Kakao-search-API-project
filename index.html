@@ -10,6 +10,10 @@
     <title>Kakao-search-API-project</title>
     <!-- reset.css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="main.css">
     <script src="app.js" defer></script>
@@ -21,8 +25,8 @@
             <div class="logo">
                 SC.GG
             </div>
-            <form>
-                <input type="text" placeholder="검색어 입력">
+            <form action="searchPage/search.html" method="GET">
+                <input type="text" placeholder="검색어 입력" name="query">
             </form>
         </header>
     </div>
