@@ -335,21 +335,21 @@ const bookURL = queryValue => {
     // 통합검색
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .total-search a')) return;
-        console.log(e.target);
+        e.preventDefault();
         getQueryInURL(usp.get('query'));
 
     })
     // 비디오 
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .video a')) return;
-        console.log(e.target);
+        e.preventDefault();
         navURL(usp.get('query'));
 
     })
     // 이미지
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .img a')) return;
-        console.log();
+        e.preventDefault();
         imgURL(usp.get('query'));
 
     })
@@ -357,7 +357,7 @@ const bookURL = queryValue => {
     // 블로그
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .blog a')) return;
-        console.log(e.target);
+        e.preventDefault();
         blogURL(usp.get('query'));
 
     })
@@ -365,14 +365,14 @@ const bookURL = queryValue => {
     // 카페
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .cafe a')) return;
-        console.log(e.target);
+        e.preventDefault();
         cafeURL(usp.get('query'));
 
     })
     // 도서
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .book a')) return;
-        console.log(e.target);
+        e.preventDefault();
         bookURL(usp.get('query'));
     })
 })();
