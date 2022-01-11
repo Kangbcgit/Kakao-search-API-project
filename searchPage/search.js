@@ -348,7 +348,7 @@ const bookURL = queryValue => {
     })
     // 이미지
     document.querySelector('.naviUl').addEventListener('click', e => {
-        if (!e.target.matches('.naviUl .img')) return;
+        if (!e.target.matches('.naviUl .img ')) return;
         e.preventDefault();
         imgURL(usp.get('query'));
 
