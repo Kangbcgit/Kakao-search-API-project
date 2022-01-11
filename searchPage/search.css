@@ -131,18 +131,18 @@ header .search-button i {
     width: 50%;
     display: flex;
     background: rgba(255, 0, 0, 0);
-    margin-top: 0.8%;
+    line-height: 3rem;
 
     position: relative;
     left: 50em;
 }
 
-.naviUl div {
+.naviUl a {
     flex: 1;
     text-align: center;
 }
 
-.naviUl div a {
+.naviUl a div {
     color: #000;
 }
 
