@@ -147,16 +147,13 @@ header .search-button i {
 }
 
 #searchUl {
-    margin-top: 2.54%;
-    width: 1903px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 }
 
-#searchUl.onclickImgW100vw {
-    /* margin: 0 auto;
-    background: red;
-    width: 100%; */
+#searchUl.onclickImgW50p {
+    width: 50%;
 }
 
 /* searching 공통 */
@@ -215,5 +212,41 @@ header .search-button i {
 }
 
 #searchUl .searching-video .img-box img {
+    width: 100%;
+}
+
+/* 이미지 검색*/
+#searchUl .searching-img {
+    width: fit-content;
+    margin: 0.3%;
+}
+
+#searchUl .searching-img .img-box {
+    width: 100%;
+}
+
+#searchUl .searching-img .img-box img {
+    width: 100%;
+}
+
+.wrap>.wrapper {
+    width: 100%;
+    display: flex;
+    margin-top: 2.54%;
+}
+
+.wrap>.wrapper>.aboutImg {
+    width: 50%;
+    background: red;
+
+    position: fixed;
+    right: 0;
+}
+
+.wrap>.wrapper>.aboutImg .img-box {
+    height: fit-content;
+}
+
+.wrap>.wrapper>.aboutImg .img-box img {
     width: 100%;
 }

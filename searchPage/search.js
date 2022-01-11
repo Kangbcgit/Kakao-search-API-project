@@ -96,12 +96,10 @@ function nav(res) {
 
 // 이미지 클릭 만드는중
 function img(res) {
-
-
     let tag = '';
     for (let i of res) {
-
         const {
+            image_url,
             collection,
             datetime,
             display_sitename,
@@ -109,15 +107,20 @@ function img(res) {
             thumbnail_url
         } = i;
 
+        let delT = datetime.slice(0, datetime.indexOf('T'));
+
+        // 
+        // <div class="datetime">작성일:${delT}</div>
+        // <div class="display_sitename">출처:${display_sitename}</div>
+        // 
         tag += `
-        <div style="clear:both;" class="searching">
+        <div class="searching-img" data-number="${res.indexOf(i)}">
             <div class="wrapper">
                 <a href="${doc_url}">
-                    <div class="collection">컬렉션:${collection}</div>
-                    <img class="thumbnail_url" src="${thumbnail_url}">
+                    <div class="img-box">
+                        <img src="${thumbnail_url}">
+                    </div>
                 </a>
-                <div class="datetime">작성일:${datetime}</div>
-                <div class="display_sitename">출처:${display_sitename}</div>
             </div>
         </div>
         `;
@@ -125,6 +128,30 @@ function img(res) {
         const $ul = document.querySelector('#searchUl');
         $ul.innerHTML = tag;
     }
+    let les = res;
+    //이미지 검색 결과 클릭시
+    // for (let i of [...document.querySelectorAll('.searching-img *')]) {}
+    document.querySelector('#searchUl').addEventListener('click', e => {
+        e.preventDefault();
+        if (!e.target.matches('#searchUl *')) return;
+        if (![...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg'))) {
+            document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
+            let aboutImg = document.createElement('div');
+            aboutImg.classList.add('aboutImg');
+            let eTargetImgbox = document.createElement('div');
+            eTargetImgbox.classList.add('img-box');
+            let eTargetImgboxImg = document.createElement('img');
+            eTargetImgboxImg.setAttribute('src', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url}`);
+            let eTargetInfo = document.createElement('div');
+            document.querySelector('.wrap > .wrapper').appendChild(aboutImg);
+            document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetImgbox);
+            document.querySelector('.wrap > .wrapper .aboutImg .img-box').appendChild(eTargetImgboxImg);
+        } else {
+            document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
+            document.querySelector('.wrap > .wrapper').removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
+        }
+
+    });
 
 }
 
@@ -312,18 +339,18 @@ const cafeURL = queryValue => {
 // 도서 조회
 const bookURL = queryValue => {
     const reqObject = {
-        method:"GET",
-        headers:{
-            'content-type':'application/json',
+        method: "GET",
+        headers: {
+            'content-type': 'application/json',
             Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
         }
     }
     fetch(`https://dapi.kakao.com/v3/search/book?query=${queryValue}`, reqObject)
-    .then(res => res.json())
-    .then(result =>{
+        .then(res => res.json())
+        .then(result => {
             console.log(result);
             book(result.documents);
-    })
+        })
 }
 
 (() => {
