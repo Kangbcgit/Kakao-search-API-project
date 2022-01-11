@@ -68,8 +68,7 @@ header form input {
 }
 
 header form input:focus {
-    font-size: 2rem;
-    font-weight: 400;
-    width: 50%;
-    height: 13%;
+    font-size: 1.7rem;
+    width: 46%;
+    height: 11%;
 }
