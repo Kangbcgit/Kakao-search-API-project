@@ -1,5 +1,3 @@
-
-
 let URL = 'http://localhost:5000/searchKeyword';
 
 //크롤링
@@ -104,10 +102,10 @@ function img(res) {
     let tag = '';
     for (let i of res) {
         const {
-            image_url,
-            collection,
+            // image_url,
+            // collection,
             datetime,
-            display_sitename,
+            // display_sitename,
             doc_url,
             thumbnail_url
         } = i;
@@ -138,27 +136,15 @@ function img(res) {
     // for (let i of [...document.querySelectorAll('.searching-img *')]) {}
     document.querySelector('#searchUl').addEventListener('click', e => {
         e.preventDefault();
+
         if (!e.target.matches('#searchUl *')) return;
         if (![...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg'))) {
-            document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
-            let aboutImg = document.createElement('div');
-            aboutImg.classList.add('aboutImg');
-            let eTargetImgbox = document.createElement('div');
-            eTargetImgbox.classList.add('img-box');
-            let eTargetImgboxImg = document.createElement('img');
-            eTargetImgboxImg.setAttribute('src', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url}`);
-            let eTargetLink = document.createElement('a');
-            eTargetLink.classList.add('url');
-            eTargetLink.setAttribute('href', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].doc_url}`);
-            document.querySelector('.wrap > .wrapper').appendChild(aboutImg);
-            document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetLink);
-            document.querySelector('.wrap > .wrapper .aboutImg .url').appendChild(eTargetImgbox);
-            document.querySelector('.wrap > .wrapper .aboutImg .url .img-box').appendChild(eTargetImgboxImg);
-
+            console.log(![...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg')) + '없어용');
+            makeAboutImg(e, res);
         } else {
             // let aboutImgIndex = [...document.querySelector('.wrap > .wrapper').children].indexOf(document.querySelector('.wrap > .wrapper .aboutImg'));
             // console.log(aboutImgIndex)
-
+            console.log([...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg')) + '있어용');
             if (document.querySelector('.wrap > .wrapper .aboutImg .img-box img').getAttribute('src') === res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url) {
                 document.querySelector('.wrap > .wrapper').removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
                 document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
@@ -166,7 +152,6 @@ function img(res) {
                 document.querySelector('.wrap > .wrapper .aboutImg .img-box img').setAttribute('src', res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url);
             }
         }
-
     });
 
 }
@@ -240,46 +225,65 @@ function cafe(res) {
     }
 
 }
-// 도서 클릭 만드는중
-function book(res) {
 
-    let tag = '';
-    for (let i of res) {
-
-        const {
-            title,
-            contents,
-            datetime,
-            url,
-            authors,
-            publisher,
-            price,
-            sale_price,
-            thumbnail,
-            status
-        } = i;
-
-        tag += `
-        <div class="serching">
-            <a href="${url}">
-                <img src="${thumbnail}" alt="미리보기">
-                <div class="title">${title}</div>
-                <div class="price">정가:${price}</div>    
-                <div class="sale_price">할인가:${sale_price}</div>    
-            </a>
-            <div class="contents">${contents}</div>
-            <div class="authors">저자:${authors}</div>    
-            <div class="publisher">출판사:${publisher}</div>    
-            <div class="status">판매상태:${status}</div>    
-            <div class="datetime">작성일:${datetime}</div>
-        </div>
-        `;
-
-        const $ul = document.querySelector('#searchUl');
-        $ul.innerHTML = tag;
-    }
-
+const makeAboutImg = (e, res) => {
+    console.log(e.target);
+    document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
+    let aboutImg = document.createElement('div');
+    aboutImg.classList.add('aboutImg');
+    let eTargetImgbox = document.createElement('div');
+    eTargetImgbox.classList.add('img-box');
+    let eTargetImgboxImg = document.createElement('img');
+    eTargetImgboxImg.setAttribute('src', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url}`);
+    let eTargetLink = document.createElement('a');
+    eTargetLink.classList.add('url');
+    eTargetLink.setAttribute('href', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].doc_url}`);
+    document.querySelector('.wrap > .wrapper').appendChild(aboutImg);
+    document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetLink);
+    document.querySelector('.wrap > .wrapper .aboutImg .url').appendChild(eTargetImgbox);
+    document.querySelector('.wrap > .wrapper .aboutImg .url .img-box').appendChild(eTargetImgboxImg);
 }
+
+// 도서 클릭 만드는중
+// function book(res) {
+
+//     let tag = '';
+//     for (let i of res) {
+
+//         const {
+//             title,
+//             contents,
+//             datetime,
+//             url,
+//             authors,
+//             publisher,
+//             price,
+//             sale_price,
+//             thumbnail,
+//             status
+//         } = i;
+
+//         tag += `
+//         <div class="serching">
+//             <a href="${url}">
+//                 <img src="${thumbnail}" alt="미리보기">
+//                 <div class="title">${title}</div>
+//                 <div class="price">정가:${price}</div>    
+//                 <div class="sale_price">할인가:${sale_price}</div>    
+//             </a>
+//             <div class="contents">${contents}</div>
+//             <div class="authors">저자:${authors}</div>    
+//             <div class="publisher">출판사:${publisher}</div>    
+//             <div class="status">판매상태:${status}</div>    
+//             <div class="datetime">작성일:${datetime}</div>
+//         </div>
+//         `;
+
+//         const $ul = document.querySelector('#searchUl');
+//         $ul.innerHTML = tag;
+//     }
+
+// }
 
 // 비디오 조회
 const navURL = queryValue => {
@@ -305,7 +309,8 @@ const imgURL = queryValue => {
         method: "GET",
         headers: {
             'content-type': 'application/json',
-            Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
+            Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`,
+            referer: "search.naver.com"
         }
     }
     fetch(`https://dapi.kakao.com/v2/search/image?query=${queryValue}&`, reqObject)
@@ -369,12 +374,19 @@ const bookURL = queryValue => {
         })
 }
 
+const imgDeleteW100p = (e) => {
+    if ([...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.wrap > .wrapper .aboutImg'))) {
+        document.querySelector('.wrap > .wrapper').removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
+        document.querySelector('#searchUl').classList.remove('onclickImgW50p');
+    }
+}
+
 (() => {
 
     const usp = new URLSearchParams(location.search);
     console.log('쿼리:', usp.get('query'));
     document.querySelector('.wrap header form input').value = usp.get('query');
-    
+
     if (![...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-web'))) {
         getQueryInURL(usp.get('query'));
     }
@@ -384,6 +396,7 @@ const bookURL = queryValue => {
         if (!e.target.matches('.naviUl .total-search')) return;
         e.preventDefault();
         getQueryInURL(usp.get('query'));
+        imgDeleteW100p(e);
 
     })
     // 비디오 
@@ -391,6 +404,7 @@ const bookURL = queryValue => {
         if (!e.target.matches('.naviUl .video')) return;
         e.preventDefault();
         navURL(usp.get('query'));
+        imgDeleteW100p(e);
 
     })
     // 이미지
@@ -398,7 +412,7 @@ const bookURL = queryValue => {
         if (!e.target.matches('.naviUl .img ')) return;
         e.preventDefault();
         imgURL(usp.get('query'));
-
+        imgDeleteW100p(e);
     })
 
     // 블로그
@@ -406,7 +420,7 @@ const bookURL = queryValue => {
         if (!e.target.matches('.naviUl .blog')) return;
         e.preventDefault();
         blogURL(usp.get('query'));
-
+        imgDeleteW100p(e);
     })
 
     // 카페
@@ -414,12 +428,13 @@ const bookURL = queryValue => {
         if (!e.target.matches('.naviUl .cafe')) return;
         e.preventDefault();
         cafeURL(usp.get('query'));
-
+        imgDeleteW100p(e);
     })
     // 도서
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .book')) return;
         e.preventDefault();
         bookURL(usp.get('query'));
+        imgDeleteW100p(e);
     })
 })();
