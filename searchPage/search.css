@@ -237,14 +237,22 @@ header .search-button i {
 
 .wrap>.wrapper>.aboutImg {
     width: 50%;
-    background: red;
+    background: #000;
+    overflow: hidden;
 
     position: fixed;
     right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 .wrap>.wrapper>.aboutImg .img-box {
-    height: fit-content;
+    width: fit-content;
+
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 00%);
+
 }
 
 .wrap>.wrapper>.aboutImg .img-box img {

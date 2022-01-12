@@ -1,5 +1,8 @@
+
+
 let URL = 'http://localhost:5000/searchKeyword';
 
+//크롤링
 
 const getQueryInURL = queryValue => {
 
@@ -72,6 +75,8 @@ function nav(res) {
         let delFrontSlash = url.slice(url.indexOf('/') + 2);
         let delBackSlash = delFrontSlash.slice(0, delFrontSlash.indexOf('/'));
 
+        let delT = datetime.slice(0, datetime.indexOf('T'));
+
         tag += `
         <div class="searching-video clearfix">
             <div class="wrapper">
@@ -82,7 +87,7 @@ function nav(res) {
                     </div>
                 </a>
                 <div class="url">${delBackSlash}</div>
-                <div class="datetime">작성일:${datetime}</div>
+                <div class="datetime">작성일 ${delT}</div>
                 <div class="author">업로더:${author}</div>
             </div>
         </div>
@@ -142,13 +147,24 @@ function img(res) {
             eTargetImgbox.classList.add('img-box');
             let eTargetImgboxImg = document.createElement('img');
             eTargetImgboxImg.setAttribute('src', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url}`);
-            let eTargetInfo = document.createElement('div');
+            let eTargetLink = document.createElement('a');
+            eTargetLink.classList.add('url');
+            eTargetLink.setAttribute('href', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].doc_url}`);
             document.querySelector('.wrap > .wrapper').appendChild(aboutImg);
-            document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetImgbox);
-            document.querySelector('.wrap > .wrapper .aboutImg .img-box').appendChild(eTargetImgboxImg);
+            document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetLink);
+            document.querySelector('.wrap > .wrapper .aboutImg .url').appendChild(eTargetImgbox);
+            document.querySelector('.wrap > .wrapper .aboutImg .url .img-box').appendChild(eTargetImgboxImg);
+
         } else {
-            document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
-            document.querySelector('.wrap > .wrapper').removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
+            // let aboutImgIndex = [...document.querySelector('.wrap > .wrapper').children].indexOf(document.querySelector('.wrap > .wrapper .aboutImg'));
+            // console.log(aboutImgIndex)
+
+            if (document.querySelector('.wrap > .wrapper .aboutImg .img-box img').getAttribute('src') === res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url) {
+                document.querySelector('.wrap > .wrapper').removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
+                document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
+            } else {
+                document.querySelector('.wrap > .wrapper .aboutImg .img-box img').setAttribute('src', res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url);
+            }
         }
 
     });
@@ -357,7 +373,11 @@ const bookURL = queryValue => {
 
     const usp = new URLSearchParams(location.search);
     console.log('쿼리:', usp.get('query'));
-    getQueryInURL(usp.get('query'));
+    document.querySelector('.wrap header form input').value = usp.get('query');
+    
+    if (![...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-web'))) {
+        getQueryInURL(usp.get('query'));
+    }
 
     // 통합검색
     document.querySelector('.naviUl').addEventListener('click', e => {
