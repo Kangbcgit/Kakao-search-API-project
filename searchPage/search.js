@@ -1,8 +1,6 @@
 let URL = 'http://localhost:5000/searchKeyword';
-
-//크롤링
-
-const getQueryInURL = queryValue => {
+//자바스크립트 비동기통신 ajax - fetch
+const getQueryInURL = (queryValue, bottomPick = 1) => {
 
     const reqObject = {
         method: "GET",
@@ -11,7 +9,7 @@ const getQueryInURL = queryValue => {
             Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
         }
     }
-    fetch(`https://dapi.kakao.com/v2/search/web?query=${queryValue}&size=20&page=1`, reqObject)
+    fetch(`https://dapi.kakao.com/v2/search/web?query=${queryValue}&size=20&page=${bottomPick.textContent}`, reqObject)
         .then(res => res.json())
         .then(result => {
             console.log(result);
@@ -52,7 +50,9 @@ function get(res) {
         const $ul = document.querySelector('#searchUl');
         $ul.innerHTML = tag;
     }
-
+    let $bottomLinks = document.createElement('a');
+    $bottomLinks.classList.add('bottomLinks');
+    document.querySelector('.wrap>.wrapper').appendChild($bottomLinks);
 }
 
 // nav비디오클릭 만드는중
@@ -133,26 +133,24 @@ function img(res) {
     }
     let les = res;
     //이미지 검색 결과 클릭시
-    // for (let i of [...document.querySelectorAll('.searching-img *')]) {}
-    document.querySelector('#searchUl').addEventListener('click', e => {
+    document.querySelector('#searchUl').onclick = e => {
         e.preventDefault();
+        let $wrapper = document.querySelector('.wrap > .wrapper');
+        let $wrapperInImg = document.querySelector('.wrap > .wrapper .aboutImg .img-box img');
+        let eParentX4 = res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number];
 
         if (!e.target.matches('#searchUl *')) return;
-        if (![...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg'))) {
-            console.log(![...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg')) + '없어용');
+        if (![...$wrapper.children].includes(document.querySelector('.aboutImg'))) {
             makeAboutImg(e, res);
         } else {
-            // let aboutImgIndex = [...document.querySelector('.wrap > .wrapper').children].indexOf(document.querySelector('.wrap > .wrapper .aboutImg'));
-            // console.log(aboutImgIndex)
-            console.log([...document.querySelector('.wrap > .wrapper').children].includes(document.querySelector('.aboutImg')) + '있어용');
-            if (document.querySelector('.wrap > .wrapper .aboutImg .img-box img').getAttribute('src') === res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url) {
-                document.querySelector('.wrap > .wrapper').removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
+            if ($wrapperInImg.getAttribute('src') === eParentX4.image_url) {
+                $wrapper.removeChild(document.querySelector('.wrap > .wrapper .aboutImg'));
                 document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
             } else {
-                document.querySelector('.wrap > .wrapper .aboutImg .img-box img').setAttribute('src', res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url);
+                $wrapperInImg.setAttribute('src', eParentX4.image_url);
             }
         }
-    });
+    };
 
 }
 
@@ -171,16 +169,20 @@ function blog(res) {
             thumbnail
         } = i;
 
+        let delT = datetime.slice(0, datetime.indexOf('T'));
+
         tag += `
-        <div style="clear:both;" class="searching">
+        <div class="searching-blog">
             <div class="wrapper">
                 <a href="${url}">
                     <div class="title">${title}</div>
-                    <img src="${thumbnail}" alt="미리보기">
+                    <div class="img-box">
+                        <img src="${thumbnail}" onerror="this.src='https://via.placeholder.com/130/202125/d0d0d0?text=failed'" alt="미리보기">
+                    </div>
                 </a>
                 <div class="contents">${contents}</div>
                 <div class="blogname">블로그명:${blogname}</div>
-                <div class="datetime">작성일:${datetime}</div>
+                <div class="datetime">작성일:${delT}</div>
             </div>
         </div>
         `;
@@ -206,16 +208,18 @@ function cafe(res) {
             thumbnail
         } = i;
 
+        let delT = datetime.slice(0, datetime.indexOf('T'));
+
         tag += `
-        <div style="clear:both;" class="searching">
+        <div class="searching-cafe">
             <div class="wrapper">
                 <a href="${url}">
-                <div class="title">${title}</div>
-                <img src="${thumbnail}" alt="미리보기">
+                    <div class="title">${title}</div>
+                    <img src="${thumbnail}" onerror="this.src='https://via.placeholder.com/130/202125/d0d0d0?text=failed'" alt="미리보기">
                 </a>
                 <div class="contents">${contents}</div>
                 <div class="cafename">카페명:${cafename}</div>
-                <div class="datetime">작성일:${datetime}</div>
+                <div class="datetime">작성일:${delT}</div>
             </div>
         </div>
         `;
@@ -227,21 +231,42 @@ function cafe(res) {
 }
 
 const makeAboutImg = (e, res) => {
-    console.log(e.target);
-    document.querySelector('#searchUl').classList.toggle('onclickImgW50p');
+    //변수 선언부
+    let $searchUl = document.querySelector('#searchUl');
     let aboutImg = document.createElement('div');
+    let eParentX4 = res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number];
+
+    $searchUl.classList.toggle('onclickImgW50p');
     aboutImg.classList.add('aboutImg');
-    let eTargetImgbox = document.createElement('div');
-    eTargetImgbox.classList.add('img-box');
-    let eTargetImgboxImg = document.createElement('img');
-    eTargetImgboxImg.setAttribute('src', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url}`);
-    let eTargetLink = document.createElement('a');
-    eTargetLink.classList.add('url');
-    eTargetLink.setAttribute('href', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].doc_url}`);
     document.querySelector('.wrap > .wrapper').appendChild(aboutImg);
-    document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetLink);
-    document.querySelector('.wrap > .wrapper .aboutImg .url').appendChild(eTargetImgbox);
-    document.querySelector('.wrap > .wrapper .aboutImg .url .img-box').appendChild(eTargetImgboxImg);
+
+    tag = `
+        <a class="url" href="${eParentX4.doc_url}">
+            <div class="img-box">
+                <img src="${eParentX4.image_url}" onerror="this.src='https://via.placeholder.com/500/202125/d0d0d0?text=loading+failed+Click+me!'" alt="클릭이미지상세">
+            </div>
+        </a>
+    `;
+
+    document.querySelector('.wrap > .wrapper .aboutImg').innerHTML = tag;
+
+
+    // let aboutImg = document.createElement('div');
+    // aboutImg.classList.add('aboutImg');
+    // let sssssss = document.createElement('img');
+    // sssssss.setAttribute('src', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].image_url}`);
+    // let eTargetImgbox = document.createElement('div');
+    // eTargetImgbox.classList.add('img-box');
+
+    // document.querySelector('.wrap > .wrapper').appendChild(aboutImg);
+    // document.querySelector('.wrap > .wrapper .aboutImg').appendChild(eTargetLink);
+    // document.querySelector('.wrap > .wrapper .aboutImg .url').appendChild(eTargetImgbox);
+    // document.querySelector('.wrap > .wrapper .aboutImg .url .img-box').appendChild(sssssss);
+
+
+    // let eTargetLink = document.createElement('a');
+    // eTargetLink.classList.add('url');
+    // eTargetLink.setAttribute('href', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].doc_url}`);
 }
 
 // 도서 클릭 만드는중
@@ -408,12 +433,12 @@ const imgDeleteW100p = (e) => {
 
     })
     // 이미지
-    document.querySelector('.naviUl').addEventListener('click', e => {
+    document.querySelector('.naviUl').onclick = e => {
         if (!e.target.matches('.naviUl .img ')) return;
         e.preventDefault();
         imgURL(usp.get('query'));
         imgDeleteW100p(e);
-    })
+    };
 
     // 블로그
     document.querySelector('.naviUl').addEventListener('click', e => {
@@ -437,4 +462,24 @@ const imgDeleteW100p = (e) => {
         bookURL(usp.get('query'));
         imgDeleteW100p(e);
     })
+    //footer > .bottomLinks
+    document.querySelector('footer').addEventListener('click', e => {
+        e.preventDefault();
+        if (!e.target.matches('footer .bottomLinks *')) return;
+        if (!(isNaN(+e.target.textContent))) {
+            getQueryInURL(usp.get('query'), e.target);
+            window.scrollTo(0, 0);
+            console.log(+e.target.textContent);
+            console.log(e.target.textContent);
+            console.log(e.target);
+        } else {
+            console.log('nan');
+        }
+        // } else {
+        //     if (e.target === document.querySelector('.left')) {
+        //         console.log('left');
+        //     }
+        //     console.log('d');
+        // }
+    });
 })();
