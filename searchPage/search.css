@@ -308,22 +308,18 @@ header .search-button i {
 
 /* bottomlinks */
 footer {
-    background: red;
-    width: 100%;
+    width: 50%;
     height: 1vh;
-    position: relative;
+    margin: 0 auto;
+    margin-top: 2%;
+    padding-bottom: 2%;
 }
 
 footer .bottomLinks {
+    width: 100%;
     display: flex;
-    /* position: relative;
-    left: 50%;
-    transform: translate(-50%, 0); */
-    width: 50%;
-    margin: 0 auto;
 }
 
 footer .bottomLinks div {
-    margin: 0 50px;
-
+    flex: 1;
 }

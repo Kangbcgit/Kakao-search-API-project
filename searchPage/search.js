@@ -9,7 +9,7 @@ const getQueryInURL = (queryValue, bottomPick = 1) => {
             Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
         }
     }
-    fetch(`https://dapi.kakao.com/v2/search/web?query=${queryValue}&size=20&page=${bottomPick.textContent}`, reqObject)
+    fetch(`https://dapi.kakao.com/v2/search/web?query=${queryValue}&size=20&page=${bottomPick}`, reqObject)
         .then(res => res.json())
         .then(result => {
             console.log(result);
@@ -269,49 +269,8 @@ const makeAboutImg = (e, res) => {
     // eTargetLink.setAttribute('href', `${res[+e.target.parentElement.parentElement.parentElement.parentElement.dataset.number].doc_url}`);
 }
 
-// 도서 클릭 만드는중
-// function book(res) {
-
-//     let tag = '';
-//     for (let i of res) {
-
-//         const {
-//             title,
-//             contents,
-//             datetime,
-//             url,
-//             authors,
-//             publisher,
-//             price,
-//             sale_price,
-//             thumbnail,
-//             status
-//         } = i;
-
-//         tag += `
-//         <div class="serching">
-//             <a href="${url}">
-//                 <img src="${thumbnail}" alt="미리보기">
-//                 <div class="title">${title}</div>
-//                 <div class="price">정가:${price}</div>    
-//                 <div class="sale_price">할인가:${sale_price}</div>    
-//             </a>
-//             <div class="contents">${contents}</div>
-//             <div class="authors">저자:${authors}</div>    
-//             <div class="publisher">출판사:${publisher}</div>    
-//             <div class="status">판매상태:${status}</div>    
-//             <div class="datetime">작성일:${datetime}</div>
-//         </div>
-//         `;
-
-//         const $ul = document.querySelector('#searchUl');
-//         $ul.innerHTML = tag;
-//     }
-
-// }
-
 // 비디오 조회
-const navURL = queryValue => {
+const navURL = (queryValue, bottomPick = 1) => {
     const reqObject = {
         method: "GET",
         headers: {
@@ -319,7 +278,7 @@ const navURL = queryValue => {
             Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
         }
     }
-    fetch(`https://dapi.kakao.com/v2/search/vclip?query=${queryValue}`, reqObject)
+    fetch(`https://dapi.kakao.com/v2/search/vclip?query=${queryValue}&page=${bottomPick}`, reqObject)
         .then(res => res.json())
         .then(result => {
             console.log(result);
@@ -329,7 +288,7 @@ const navURL = queryValue => {
 }
 
 // 이미지 조회
-const imgURL = queryValue => {
+const imgURL = (queryValue, bottomPick = 1) => {
     const reqObject = {
         method: "GET",
         headers: {
@@ -338,17 +297,17 @@ const imgURL = queryValue => {
             referer: "search.naver.com"
         }
     }
-    fetch(`https://dapi.kakao.com/v2/search/image?query=${queryValue}&`, reqObject)
+    fetch(`https://dapi.kakao.com/v2/search/image?query=${queryValue}&page=${bottomPick}&size=78`, reqObject)
         .then(res => res.json())
         .then(result => {
-            console.log(result);
+            console.log(result.documents);
             img(result.documents);
         })
 
 }
 
 // 블로그 조회
-const blogURL = queryValue => {
+const blogURL = (queryValue, bottomPick = 1) => {
     const reqObject = {
         method: "GET",
         headers: {
@@ -356,7 +315,7 @@ const blogURL = queryValue => {
             Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
         }
     }
-    fetch(`https://dapi.kakao.com/v2/search/blog?query=${queryValue}`, reqObject)
+    fetch(`https://dapi.kakao.com/v2/search/blog?query=${queryValue}&page=${bottomPick}`, reqObject)
         .then(res => res.json())
         .then(result => {
             console.log(result);
@@ -366,7 +325,7 @@ const blogURL = queryValue => {
 }
 
 // 카페 조회
-const cafeURL = queryValue => {
+const cafeURL = (queryValue, bottomPick = 1) => {
     const reqObject = {
         method: "GET",
         headers: {
@@ -374,29 +333,13 @@ const cafeURL = queryValue => {
             Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
         }
     }
-    fetch(`https://dapi.kakao.com/v2/search/cafe?query=${queryValue}`, reqObject)
+    fetch(`https://dapi.kakao.com/v2/search/cafe?query=${queryValue}&page=${bottomPick}`, reqObject)
         .then(res => res.json())
         .then(result => {
             console.log(result);
             cafe(result.documents);
         })
 
-}
-// 도서 조회
-const bookURL = queryValue => {
-    const reqObject = {
-        method: "GET",
-        headers: {
-            'content-type': 'application/json',
-            Authorization: `KakaoAK 71f78f513d7f543d37d983c84b74d34f`
-        }
-    }
-    fetch(`https://dapi.kakao.com/v3/search/book?query=${queryValue}`, reqObject)
-        .then(res => res.json())
-        .then(result => {
-            console.log(result);
-            book(result.documents);
-        })
 }
 
 const imgDeleteW100p = (e) => {
@@ -411,15 +354,20 @@ const imgDeleteW100p = (e) => {
     const usp = new URLSearchParams(location.search);
     console.log('쿼리:', usp.get('query'));
     document.querySelector('.wrap header form input').value = usp.get('query');
-
+    console.log(+usp.get('query'));
     if (![...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-web'))) {
-        getQueryInURL(usp.get('query'));
+        if (+usp.get('query') === 0) {
+
+        } else {
+            getQueryInURL(usp.get('query'));
+        }
     }
 
     // 통합검색
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .total-search')) return;
         e.preventDefault();
+        window.scrollTo(0, 0);
         getQueryInURL(usp.get('query'));
         imgDeleteW100p(e);
 
@@ -428,6 +376,7 @@ const imgDeleteW100p = (e) => {
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .video')) return;
         e.preventDefault();
+        window.scrollTo(0, 0);
         navURL(usp.get('query'));
         imgDeleteW100p(e);
 
@@ -437,6 +386,7 @@ const imgDeleteW100p = (e) => {
         if (!e.target.matches('.naviUl .img ')) return;
         e.preventDefault();
         imgURL(usp.get('query'));
+        window.scrollTo(0, 0);
         imgDeleteW100p(e);
     };
 
@@ -444,6 +394,7 @@ const imgDeleteW100p = (e) => {
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .blog')) return;
         e.preventDefault();
+        window.scrollTo(0, 0);
         blogURL(usp.get('query'));
         imgDeleteW100p(e);
     })
@@ -452,6 +403,7 @@ const imgDeleteW100p = (e) => {
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .cafe')) return;
         e.preventDefault();
+        window.scrollTo(0, 0);
         cafeURL(usp.get('query'));
         imgDeleteW100p(e);
     })
@@ -459,6 +411,7 @@ const imgDeleteW100p = (e) => {
     document.querySelector('.naviUl').addEventListener('click', e => {
         if (!e.target.matches('.naviUl .book')) return;
         e.preventDefault();
+        window.scrollTo(0, 0);
         bookURL(usp.get('query'));
         imgDeleteW100p(e);
     })
@@ -467,19 +420,32 @@ const imgDeleteW100p = (e) => {
         e.preventDefault();
         if (!e.target.matches('footer .bottomLinks *')) return;
         if (!(isNaN(+e.target.textContent))) {
-            getQueryInURL(usp.get('query'), e.target);
             window.scrollTo(0, 0);
-            console.log(+e.target.textContent);
-            console.log(e.target.textContent);
-            console.log(e.target);
+            console.log(e.target.innerHTML);
+            if ([...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-web'))) {
+                getQueryInURL(usp.get('query'), e.target.textContent);
+            } else if ([...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-video'))) {
+                navURL(usp.get('query'), e.target.textContent);
+            } else if ([...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-img'))) {
+                imgURL(usp.get('query'), e.target.textContent);
+            } else if ([...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-blog'))) {
+                blogURL(usp.get('query'), e.target.textContent);
+            } else if ([...document.querySelector('#searchUl').children].includes(document.querySelector('.searching-cafe'))) {
+                cafeURL(usp.get('query'), e.target.textContent);
+            }
         } else {
-            console.log('nan');
+            let $bottomLinksChildren = [...document.querySelector('footer .bottomLinks').children];
+            if (e.target.textContent === '<' && +$bottomLinksChildren[1].textContent > 10) {
+                for (let i = 1; i < $bottomLinksChildren.length - 1; i++) {
+                    let number = +$bottomLinksChildren[i].textContent;
+                    $bottomLinksChildren[i].textContent = `${number - 10}`;
+                }
+            } else if (e.target.textContent === '>') {
+                for (let i = 1; i < $bottomLinksChildren.length - 1; i++) {
+                    let number = +$bottomLinksChildren[i].textContent;
+                    $bottomLinksChildren[i].textContent = `${number + 10}`;
+                }
+            }
         }
-        // } else {
-        //     if (e.target === document.querySelector('.left')) {
-        //         console.log('left');
-        //     }
-        //     console.log('d');
-        // }
     });
 })();
